@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+# further settings to be validated:
+# --bootappend-live "boot=live components locales=de_DE.UTF-8 keyboard-layouts=de" \
+#
+# --interactive shell \
+# --archive-areas "main contrib non-free non-free-firmware" \
+#
+lb config noauto \
+    --mode debian \
+    --architectures amd64 \
+    --distribution trixie \
+    --debian-installer none \
+    --archive-areas "main contrib" \
+    --bootappend-live "boot=live components locales=de_DE.UTF-8 keyboard-layouts=de timezone=Europe/Berlin hostname=PBClive username=debian" \
+    --memtest none \
+    "${@}"
