@@ -10,7 +10,7 @@ sudo apt install -y netselect-apt
 ## Cloning the repository
 
 ```bash
-git clone
+git clone https://github.com/anderl1969/PBSLiveRescue.git
 ```
 
 ## Building the iso
