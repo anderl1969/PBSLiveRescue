@@ -1,6 +1,5 @@
-# Installation
-
-## Commands to install live build
+# Preparing Build Environment
+## Install packages for live build
 
 ```bash
 sudo apt update
@@ -8,59 +7,21 @@ sudo apt install -y live-build squashfs-tools live-boot live-config xorriso isol
 sudo apt install -y netselect-apt
 ```
 
-## Configure Build Environment
-
-### Create Project Folder
+## Cloning the repository
 
 ```bash
-mkdir -p Project-Folder/auto
-cd Project-Folder/auto
-touch build clean config
+git clone
 ```
 
-### Auto scripts
-
-#### Build script
+## Building the iso
 
 ```bash
-#!/bin/sh
+cd <Project folder>
 
-set -e
-
-lb build noauto "${@}" 2>&1 | tee build.log
+lb clean
+lb config
+lb build
 ```
-
-#### Clean script
-
-```bash
-#!/bin/sh
-
-set -e
-
-lb clean noauto "${@}"
-rm -f config/binary config/bootstrap config/chroot config/common config/source
-rm -f build.log
-```
-
-#### Config script
-
-```bash
-#!/bin/sh
-
-set -e
-
-lb config noauto \
-    --mode debian \
-    --architectures amd64 \
-    --distribution trixie \
-    --debian-installer none \
-    --archive-areas "main contrib" \
-    --bootappend-live "boot=live components locales=de_DE.UTF-8 keyboard-layouts=de timezone=Europe/Berlin hostname=PBClive username=debian" \
-    --memtest none \
-    "${@}"
-```
-
-
 
 
 # To Do list
