@@ -1,5 +1,9 @@
 #!/bin/bash
 
+WORK_DIR=$(dirname $(readlink -f $0))
+TOKEN_FILE=token_secret
+REPO_FILE=repository_secret
+
 OPT_NAMESPACE=""
 PBS_NAMESPACE=""
 
@@ -8,7 +12,9 @@ MY_REPOSITORY=REPOSITORY_CONNECT_STRING
 
 # do not edit below this line
 
-export PBS_PASSWORD_FILE="/opt/proxmoxbackupclient/pbs_token_secret"
+export PBS_PASSWORD_FILE=$WORK_DIR/$TOKEN_FILE
+source $WORK_DIR/$REPO_FILE
+export PBS_REPOSITORY
 
 print_help() {
     echo Prints a List of all snapshots.
@@ -55,4 +61,4 @@ if [ $# -gt 0 ]; then
     exit 1
 fi
 
-proxmox-backup-client snapshot list $MY_BACKUP_GROUP --repository $MY_REPOSITORY $OPT_NAMESPACE $PBS_NAMESPACE
+proxmox-backup-client snapshot list $MY_BACKUP_GROUP $OPT_NAMESPACE $PBS_NAMESPACE
