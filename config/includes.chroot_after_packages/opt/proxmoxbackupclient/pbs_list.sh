@@ -1,33 +1,58 @@
 #!/bin/bash
 
-PBS_NAMESPACE="Server"
+OPT_NAMESPACE=""
+PBS_NAMESPACE=""
+
 MY_REPOSITORY=REPOSITORY_CONNECT_STRING
-MY_BACKUP_GROUP=host/$(hostname)
+#MY_BACKUP_GROUP=host/$(hostname)
 
 # do not edit below this line
 
-#export PBS_PASSWORD_FILE="/opt/scripts/pbs_token_secret"
-export PBS_PASSWORD_FILE="./pbs_token_secret"
+export PBS_PASSWORD_FILE="/opt/proxmoxbackupclient/pbs_token_secret"
 
 print_help() {
-    echo Lists all snapshots of a certain backup group.
+    echo Prints a List of all snapshots.
     echo
     echo Usage:
-    echo -e "$(basename $0) --help    \t  - prints this help text"
-    echo -e "$(basename $0)           \t  - lists all snapshots of $MY_BACKUP_GROUP"
-    echo -e "$(basename $0) [<group>] \t  - lists all snapshots of <group>"
+    echo -e "$(basename $0) -h        \t  - prints this help text."
+    echo -e "$(basename $0) [options] \t  - list all snapshots."
+    echo
+    echo -e "Parameters:"
+    echo
+    echo -e "Options:"
+    echo -e "-h                \t  - Prints help information."
+    echo -e "-g <group>        \t  - Lists snapshots of <group>. If not provided, all snapshots are listed."
+    echo -e "-n <namespace>    \t  - Specifies a custom Namespace on PBS. If not provided the Root-Namespace will be used."
+
 }
 
+while getopts "hg:n:" opt; do
+    case $opt in
+        h)
+            print_help
+            exit 0
+            ;;
+        g)
+            MY_BACKUP_GROUP=$OPTARG
+            ;;
+        n)
+            OPT_NAMESPACE=--ns
+            PBS_NAMESPACE=$OPTARG
+            ;;
+        *)
+            print_help
+            exit 1
+            ;;
+    esac
+done
+
+shift $((OPTIND - 1))
+
 if [ $# -gt 0 ]; then
-    # Arguments passed!
-    if [ $1 = --help ]; then
-        print_help
-        exit 0
-    else
-        # if not 'help' then 1st argument is backup-group
-        MY_BACKUP_GROUP=$1
-    fi
+    # unexpected arguments!
+    echo -e "No more arguments expected. Given '$1'!\n"
+    print_help
+    exit 1
 fi
 
-# Specifying no backup-group lists all snapshots in the namespace
-proxmox-backup-client snapshot list $MY_BACKUP_GROUP --repository $MY_REPOSITORY --ns $PBS_NAMESPACE
+proxmox-backup-client snapshot list $MY_BACKUP_GROUP --repository $MY_REPOSITORY $OPT_NAMESPACE $PBS_NAMESPACE
