@@ -12,12 +12,9 @@ MY_REPOSITORY=REPOSITORY_CONNECT_STRING
 
 # do not edit below this line
 
-export PBS_PASSWORD_FILE=$WORK_DIR/$TOKEN_FILE
-source $WORK_DIR/$REPO_FILE
-export PBS_REPOSITORY
-
 print_help() {
     echo Prints a List of all snapshots.
+    echo To function properly the files \'$TOKEN_FILE\' and \'$REPO_FILE\' must exist in $WORK_DIR
     echo
     echo Usage:
     echo -e "$(basename $0) -h        \t  - prints this help text."
@@ -31,6 +28,17 @@ print_help() {
     echo -e "-n <namespace>    \t  - Specifies a custom Namespace on PBS. If not provided the Root-Namespace will be used."
 
 }
+
+# check if mandatory files are present
+if [ ! -f $WORK_DIR/$TOKEN_FILE ] || [ ! -f $WORK_DIR/$REPO_FILE ] ; then
+    echo -e "Missing File(s)!\n"
+    print_help
+    exit 1
+fi
+
+export PBS_PASSWORD_FILE=$WORK_DIR/$TOKEN_FILE
+source $WORK_DIR/$REPO_FILE
+export PBS_REPOSITORY
 
 while getopts "hg:n:" opt; do
     case $opt in
