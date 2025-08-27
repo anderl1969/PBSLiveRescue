@@ -1,0 +1,37 @@
+# permanent folders of no interest
+/.build/
+/cache/
+/local/
+
+# build folders
+/chroot/
+/binary/
+
+# build files inside config
+/config/binary
+/config/bootstrap
+/config/chroot
+/config/common
+/config/source
+
+# no hooks
+/config/hooks/
+
+#*.log
+build.log
+.lock
+
+# secrets
+#pbs_token_secret
+*_secret
+
+
+/chroot.*
+/live-image-*
+/binary.modified_timestamps
+
+
+#/config/archives/*
+#/config/includes.chroot_after_packages/*
+# /config/package-lists/*
+# !/config/package-lists/live.list.chroot
