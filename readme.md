@@ -22,12 +22,3 @@ lb clean
 lb config
 lb build
 ```
-
-
-# To Do list
-
-- add `/opt/proxmoxbackupclient` to path
-- add `pbs_restore_img-full.sh``
-- fix script parameter handling
-- permission of /opt/proxmoxbackupclient back to 744 (600 for tokenfile)
--
