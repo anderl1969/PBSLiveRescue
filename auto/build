@@ -2,4 +2,36 @@
 
 set -e
 
+# Include some helper scripts
+SCRIPT_DIR=$(dirname "$0")
+. "$SCRIPT_DIR/helper"
+
+# check existence of secret files (using ./helper)
+if check_secret_files ERROR; then
+    # every thing is fine
+    echo "INFO: secret files all populated."
+else
+    # there are files missing
+    # Ask user what to do
+    while true; do
+        printf "Some recommended files are not populated! Proceed anyway? (y/n): "
+        read ans
+        case "$ans" in
+            [Nn]* )
+                echo "Script canceled by user."
+                exit 1
+                ;;
+            [JjYy]* )
+                echo "Continue..."
+                break
+                ;;
+            * )
+                echo "Please answer with y or n."
+                ;;
+        esac
+    done
+
+fi
+
+#echo "DRYRUN: lb build noauto "${@}" 2>&1 | tee build.log"
 lb build noauto "${@}" 2>&1 | tee build.log

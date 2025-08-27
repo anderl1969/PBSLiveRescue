@@ -2,6 +2,10 @@
 
 set -e
 
+# Include some helper scripts
+SCRIPT_DIR=$(dirname "$0")
+. "$SCRIPT_DIR/helper"
+
 # further settings to be validated:
 # --bootappend-live "boot=live components locales=de_DE.UTF-8 keyboard-layouts=de" \
 #
@@ -17,3 +21,12 @@ lb config noauto \
     --bootappend-live "boot=live components locales=de_DE.UTF-8 keyboard-layouts=de timezone=Europe/Berlin hostname=PBClive username=debian" \
     --memtest none \
     "${@}"
+
+# check existence of secret files (using ./helper)
+check_secret_files WARNING
+
+# WARNING:
+# The check_secret_files returns 1 if there are missing files
+# Because of 'set -e' the script exits immediatly
+
+# If you want to run code beyond here, you have to wrap the return code in an if-then-else block (see 'build')

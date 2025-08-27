@@ -1,0 +1,40 @@
+check_secret_files() {
+    # check if secrets exists
+
+    LEVEL="$1"
+    MISSING_FILE=0
+
+    # List of files to check
+    SECRET_FILES="
+    config/includes.chroot_after_packages/opt/proxmoxbackupclient/token_secret
+    config/includes.chroot_after_packages/opt/proxmoxbackupclient/repository_secret
+    "
+
+    # Defining some default colors
+    RED='\033[31m'
+    GREEN='\033[32m'
+    YELLOW='\033[33m'
+    MAGENTA='\033[35m'
+    RESET='\033[0m'
+
+    case $LEVEL in
+        WARNING)
+            LEVEL_COLOR=$YELLOW
+            ;;
+        ERROR)
+            LEVEL_COLOR=$RED
+            ;;
+        *)
+            LEVEL_COLOR=$RESET   # Standardfall
+            ;;
+    esac
+
+    for file in $SECRET_FILES; do
+        if [ ! -f $file ]; then
+            printf "${LEVEL_COLOR}${LEVEL}: ${MAGENTA}${file}${RESET} is missing. Please read the docs - you want it in your Image!\n"
+            MISSING_FILE=1
+        fi
+    done
+
+    return "$MISSING_FILE"
+}
