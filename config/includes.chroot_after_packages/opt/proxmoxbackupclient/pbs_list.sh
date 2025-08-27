@@ -7,7 +7,6 @@ REPO_FILE=repository_secret
 OPT_NAMESPACE=""
 PBS_NAMESPACE=""
 
-MY_REPOSITORY=REPOSITORY_CONNECT_STRING
 #MY_BACKUP_GROUP=host/$(hostname)
 
 # do not edit below this line

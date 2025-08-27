@@ -1,20 +1,22 @@
 #!/bin/bash
 
+WORK_DIR=$(dirname $(readlink -f $0))
+TOKEN_FILE=token_secret
+REPO_FILE=repository_secret
+
 #PBS_BACKUP_TARGET="fulldrive.img:/dev/sda"
 PBS_BACKUP_TARGET="fulldrive.img:"
 
 OPT_NAMESPACE=""
 PBS_NAMESPACE=""
 
-MY_REPOSITORY=REPOSITORY_CONNECT_STRING
 MY_BACKUPID="RESC_"$(hostname -I | awk '{print $1}')
 
 # do not edit below this line
 
-export PBS_PASSWORD_FILE="/opt/proxmoxbackupclient/pbs_token_secret"
-
 print_help() {
     echo Clones the full drive to Proxmox Backup Server.
+    echo To function properly the files \'$TOKEN_FILE\' and \'$REPO_FILE\' must exist in $WORK_DIR
     echo
     echo Usage:
     echo -e "$(basename $0) -h               \t  - prints this help text."
@@ -29,6 +31,17 @@ print_help() {
     echo -e "-i <backup-id> \t  - Specifies a custom Backup-ID. If not provided 'RESC_<IP address>' will be used."
     echo -e "-n <namespace> \t  - Specifies a custom Namespace on PBS. If not provided the Root-Namespace will be used."
 }
+
+# check if mandatory files are present
+if [ ! -f $WORK_DIR/$TOKEN_FILE ] || [ ! -f $WORK_DIR/$REPO_FILE ] ; then
+    echo -e "Missing File(s)!\n"
+    print_help
+    exit 1
+fi
+
+export PBS_PASSWORD_FILE=$WORK_DIR/$TOKEN_FILE
+source $WORK_DIR/$REPO_FILE
+export PBS_REPOSITORY
 
 while getopts "hi:n:" opt; do
     case $opt in
@@ -72,7 +85,7 @@ PBS_BACKUP_NAME="$PBS_BACKUP_TARGET"$1
 LOG=$0.log
 date > $LOG
 
-echo "proxmox-backup-client backup "$PBS_BACKUP_NAME" --backup-id "$MY_BACKUPID" --repository "$MY_REPOSITORY $OPT_NAMESPACE $PBS_NAMESPACE >> $LOG
-proxmox-backup-client backup $PBS_BACKUP_NAME --backup-id $MY_BACKUPID --repository $MY_REPOSITORY $OPT_NAMESPACE $PBS_NAMESPACE >> $LOG 2>&1
+echo "proxmox-backup-client backup "$PBS_BACKUP_NAME" --backup-id "$MY_BACKUPID $OPT_NAMESPACE $PBS_NAMESPACE >> $LOG
+proxmox-backup-client backup $PBS_BACKUP_NAME --backup-id $MY_BACKUPID $OPT_NAMESPACE $PBS_NAMESPACE >> $LOG 2>&1
 
 date >> $LOG

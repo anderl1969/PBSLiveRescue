@@ -1,22 +1,21 @@
 #!/bin/bash
 
-# snapshot: host/debBackupTest/2025-08-23T14:32:45Z
-# archive:  sda1.img.fidx
+WORK_DIR=$(dirname $(readlink -f $0))
+TOKEN_FILE=token_secret
+REPO_FILE=repository_secret
+
 MY_ARCHIVE=fulldrive.img
-TARGET_PATH=-
+TARGET_PATH=-       # stdout
 
 OPT_NAMESPACE=""
 PBS_NAMESPACE=""
 
-MY_REPOSITORY=REPOSITORY_CONNECT_STRING
-
 # do not edit below this line
-
-export PBS_PASSWORD_FILE="/opt/proxmoxbackupclient/pbs_token_secret"
 
 print_help() {
     echo "Restores a full image back to stdout. Use tools like dd to write it to an disk."
     echo -e "e.g.: $(basename $0) ... | sudo dd of=/dev/nvme0n1 status=progress bs=1M"
+    echo To function properly the files \'$TOKEN_FILE\' and \'$REPO_FILE\' must exist in $WORK_DIR
     echo
     echo Usage:
     echo -e "$(basename $0) -h                 \t  - prints this help text."
@@ -28,9 +27,19 @@ print_help() {
     echo
     echo -e "Options:"
     echo -e "-h             \t  - Prints help information."
-    #echo -e "-i <backup-id> \t  - Specifies a custom Backup-ID. If not provided 'RESC_<IP address>' will be used."
     echo -e "-n <namespace> \t  - Specifies a custom Namespace on PBS. If not provided the Root-Namespace will be used."
 }
+
+# check if mandatory files are present
+if [ ! -f $WORK_DIR/$TOKEN_FILE ] || [ ! -f $WORK_DIR/$REPO_FILE ] ; then
+    echo -e "Missing File(s)!\n"
+    print_help
+    exit 1
+fi
+
+export PBS_PASSWORD_FILE=$WORK_DIR/$TOKEN_FILE
+source $WORK_DIR/$REPO_FILE
+export PBS_REPOSITORY
 
 while getopts "hn:" opt; do
     case $opt in
@@ -60,4 +69,4 @@ fi
 
 MY_SNAPSHOT=$1
 
-proxmox-backup-client restore $MY_SNAPSHOT $MY_ARCHIVE $TARGET_PATH --repository $MY_REPOSITORY --ns $PBS_NAMESPACE
+proxmox-backup-client restore $MY_SNAPSHOT $MY_ARCHIVE $TARGET_PATH --ns $PBS_NAMESPACE
