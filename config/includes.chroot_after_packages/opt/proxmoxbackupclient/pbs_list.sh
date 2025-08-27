@@ -7,8 +7,6 @@ REPO_FILE=repository_secret
 OPT_NAMESPACE=""
 PBS_NAMESPACE=""
 
-#MY_BACKUP_GROUP=host/$(hostname)
-
 # do not edit below this line
 
 print_help() {
@@ -24,6 +22,7 @@ print_help() {
     echo -e "Options:"
     echo -e "-h                \t  - Prints help information."
     echo -e "-g <group>        \t  - Lists snapshots of <group>. If not provided, all snapshots are listed."
+    echo -e "                  \t    If you want to show snapshots of the current machine, use '-g host/\$(hostname)'"
     echo -e "-n <namespace>    \t  - Specifies a custom Namespace on PBS. If not provided the Root-Namespace will be used."
 
 }

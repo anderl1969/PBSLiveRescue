@@ -4,7 +4,7 @@ WORK_DIR=$(dirname $(readlink -f $0))
 TOKEN_FILE=token_secret
 REPO_FILE=repository_secret
 
-#PBS_BACKUP_TARGET="fulldrive.img:/dev/sda"
+# must expand to something like this: "fulldrive.img:/dev/sda" (see below)
 PBS_BACKUP_TARGET="fulldrive.img:"
 
 OPT_NAMESPACE=""
