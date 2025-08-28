@@ -22,16 +22,9 @@ build.log
 .lock
 
 # secrets
-#pbs_token_secret
 *_secret
 
 
 /chroot.*
 /live-image-*
 /binary.modified_timestamps
-
-
-#/config/archives/*
-#/config/includes.chroot_after_packages/*
-# /config/package-lists/*
-# !/config/package-lists/live.list.chroot
