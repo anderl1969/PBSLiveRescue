@@ -19,6 +19,8 @@ lb config noauto \
     --debian-installer none \
     --archive-areas "main contrib" \
     --bootappend-live "boot=live components locales=de_DE.UTF-8 keyboard-layouts=de timezone=Europe/Berlin hostname=PBClive username=debian" \
+    --iso-application "PBC Live" \
+    --iso-volume "PBC Live $(date '+%y%m%d')" \
     --memtest none \
     "${@}"
 
