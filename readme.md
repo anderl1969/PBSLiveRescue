@@ -1,5 +1,9 @@
-# Preparing Build Environment
-## Install packages for live build
+# PBS Live
+![version](https://img.shields.io/badge/version-1.0.0-blue)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+
+## Preparing Build Environment
+### Install packages for live build
 
 ```bash
 sudo apt update
@@ -7,14 +11,14 @@ sudo apt install -y live-build squashfs-tools live-boot live-config xorriso isol
 sudo apt install -y netselect-apt
 ```
 
-## Cloning the repository
+### Cloning the repository
 
 ```bash
 git clone https://github.com/anderl1969/PBSLiveRescue
 ```
 
-# Building the iso
-## Quick Run
+## Building the iso
+### Quick Run
 
 ```bash
 cd PBSLiveRescue
@@ -29,7 +33,7 @@ Note:
 > However, for a first run it's absolutely fine to ignore these and tell `sudo lb build` to proceed anyway.
 > You should end with a working ISO image with a preinstalled **Proxmox Backup Client**
 
-## Flashing USB Thumb Drive
+### Flashing USB Thumb Drive
 
 - After the build process finished successfully, you have the following files in your folder, among many others:
     ```bash
@@ -42,9 +46,9 @@ Note:
 - Flash the iso-file `live-image-amd64.hybrid.iso` to an USB Thumb Drive using an appropriate tool like balenaEtcher, Rufus, ...
 Be sure, the tool is capable to create a bootable thumb drive.
 
-# Booting from USB
+## Booting from USB
 
-## Quick Run
+### Quick Run
 
 Before you put any effort in customizing the Live Image, you should test it. **Especially if your machine(s), that you want to baremetal backup & restore with, can boot from the thumb drive.**
 - Shut down your test machine.
@@ -55,17 +59,18 @@ If your thumb drive is not shown, you should check your BIOS settings and/or if 
 
 - Select & confirm your thumb drive
 - Grub should welcome you with the following boot screen
+
   ![Grub Boot Menu](./docs/pics/bootmenu.png "Grub Boot Menu")
 - Hit `Enter` to boot the Live Image
 
-# Customizing
+## Customizing
 
 When your **Quick Run** tests succeeded, it's now time to put some effort in customizing the Live System.
 First and foremost you must provide two secret files if you want to use the built in backup scripts. (see below)
 
 You also can add some additional software if you want.
 
-## Built in Backup-Scripts
+### Built in Backup-Scripts
 In `config/includes.chroot_after_packages/opt/proxmoxbackupclient/` you find some usefull backup scripts you may want to use:
 
 ```bash
@@ -79,11 +84,11 @@ repository_secret.README
 token_secret.README
 ```
 
-## Secret Files
+### Secret Files
 These scripts require two secret files to connect and authorize to the Proxmox Backup Server. Understandably, these two files are not part of the repository.
 But there are two templates to get you started:
 
-### token_secret
+#### token_secret
 `config/includes.chroot_after_packages/opt/proxmoxbackupclient/token_secret`
 
 ```
@@ -91,7 +96,7 @@ aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
 ```
 Insert a valid API token of the proxmox backup server.
 
-### repository_secret
+#### repository_secret
 `config/includes.chroot_after_packages/opt/proxmoxbackupclient/repository_secret`
 
 ```bash
