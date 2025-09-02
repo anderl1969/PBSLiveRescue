@@ -28,3 +28,6 @@ build.log
 /chroot.*
 /live-image-*
 /binary.modified_timestamps
+
+# ignore additional splash screen variants
+/config/bootloaders/_splash*.svg
