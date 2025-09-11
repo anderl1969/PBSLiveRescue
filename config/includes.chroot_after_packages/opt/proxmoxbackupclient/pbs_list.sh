@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 WORK_DIR=$(dirname $(readlink -f $0))
 TOKEN_FILE=token_secret
@@ -22,7 +22,7 @@ print_help() {
     echo -e "Options:"
     echo -e "-h                \t  - Prints help information."
     echo -e "-g <group>        \t  - Lists snapshots of <group>. If not provided, all snapshots are listed."
-    echo -e "                  \t    If you want to show snapshots of the current machine, use '-g host/\$(hostname)'"
+    echo -e "-l                \t  - Shows snapshots of the current machine. (same as '-g host/\$(hostname)')"
     echo -e "-n <namespace>    \t  - Specifies a custom Namespace on PBS. If not provided the Root-Namespace will be used."
 
 }
@@ -38,7 +38,7 @@ export PBS_PASSWORD_FILE=$WORK_DIR/$TOKEN_FILE
 source $WORK_DIR/$REPO_FILE
 export PBS_REPOSITORY
 
-while getopts "hg:n:" opt; do
+while getopts "hg:ln:" opt; do
     case $opt in
         h)
             print_help
@@ -46,6 +46,9 @@ while getopts "hg:n:" opt; do
             ;;
         g)
             MY_BACKUP_GROUP=$OPTARG
+            ;;
+        l)
+            MY_BACKUP_GROUP=host/$(hostname)
             ;;
         n)
             OPT_NAMESPACE=--ns
